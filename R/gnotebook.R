@@ -94,6 +94,7 @@ GNotebook <- setRefClass("GNotebook",
                                 hbox$packStart(l, expand=TRUE, fill=TRUE)
                                 if(!is.null(close.button) && close.button) {
                                   evb <- gtkEventBox()
+                                  evb$addEvents(GdkEventMask["all-events-mask"])
                                   evb$setVisibleWindow(FALSE)
                                   hbox$packEnd(evb)
                                   img <- gtkImageNew()
@@ -132,6 +133,23 @@ GNotebook <- setRefClass("GNotebook",
                               remove_current_page = function() {
                                 remove_page_by_index(get_index())
                               },
+                                add_tab_icon = function(page, stock.id, handler=NULL, where="left") {
+                                    "Add a stock icon to a tab (by index) with optional handler."
+                                    child <- widget$getNthPage(page - 1L)
+                                    box <- widget$getTabLabel(child)
+                                    icon <- gimage(stock.id=stock.id, handler=handler)
+                                    evb <- icon$widget$parent
+                                    box$packStart(evb)
+                                    if (where == "left")
+                                        box$reorderChild(evb, 0L)
+                                  
+                                },
+                                add_tab_tooltip = function(page, tooltip) {
+                                    "Add a tooltip to a tab (by index)"
+                                    child <- widget$getNthPage(page - 1L)
+                                    box <- widget$getTabLabel(child)
+                                    sapply(box$getChildren(), function(x) x$setTooltipText(tooltip))
+                                },
                               ## handlers
                               add_handler_changed=function(handler, action=NULL, ...) {
                                 "A tab changed"

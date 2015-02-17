@@ -18,9 +18,9 @@ NULL
 }
 
 
-##' The GEdit class adds some methods beyond the spec: \code{set_error}, \code{clear_error}, \code{validate_value}
-##'
-##' @param ... passed to constructor
+## The GEdit class adds some methods beyond the spec: \code{set_error}, \code{clear_error}, \code{validate_value}
+##
+## @param ... passed to constructor
 GEdit <- setRefClass("GEdit",
                             contains="GWidget",
                             fields=list(
@@ -51,11 +51,13 @@ GEdit <- setRefClass("GEdit",
                                 if(nchar(init_msg) > 0) {
                                   id <- gSignalConnect(widget, "focus-in-event", function(...) {
                                     clear_init_txt()
+                                    FALSE
                                   })
-                                  gSignalConnect(widget, "focus-out-event", function(...) {
+                                  id <- gSignalConnect(widget, "focus-out-event", function(...) {
                                     if(nchar(widget$getText()) == 0) {
                                       set_init_txt()
                                     }
+                                    FALSE
                                   })
                                 }
                                 ## overwrite?
@@ -75,8 +77,8 @@ GEdit <- setRefClass("GEdit",
 #                                })
                                 
 #                                handler_id <<- add_handler_changed(handler, action)
-                                ## change handler on focus out event
-                                add_handler_blur(function(...) invoke_change_handler())
+                                ## XXX now optionalchange handler on focus out event
+                                ## add_handler_blur(function(...) invoke_change_handler())
                                 
                                 callSuper(toolkit)
                               },
@@ -104,6 +106,7 @@ GEdit <- setRefClass("GEdit",
                                 if(init_msg_flag)
                                   widget$setText("")
                                 init_msg_flag <<- FALSE
+                                
                               },
                               get_items=function(i, j, ..., drop=TRUE) {
                                 "i for index"
@@ -174,6 +177,7 @@ GEdit <- setRefClass("GEdit",
                               set_icon = function(stock, where="start") { ## or end
                                 where = GtkEntryIconPosition[ifelse(where == "end", "secondary", "primary")]
                                 widget$setIconFromStock(where, getStockIconByName(stock))
+                                Map(function(x) widget$setIconActivatable(x, FALSE), c("secondary", "primary"))
                               },
                               set_icon_handler = function(callback, where="start") {
                                 where = GtkEntryIconPosition[ifelse(where == "end", "secondary", "primary")]

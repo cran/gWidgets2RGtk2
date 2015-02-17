@@ -30,7 +30,8 @@ GText <- setRefClass("GText",
                      contains="GWidget",
                      fields=list(
                        buffer="ANY",
-                       tag_table="ANY"
+                       tag_table="ANY",
+                       font_attr="list"
                        ),
                      methods=list(
                        initialize=function(toolkit=NULL,
@@ -51,13 +52,13 @@ GText <- setRefClass("GText",
                          block <<- gtkScrolledWindowNew()
                          block$SetPolicy("GTK_POLICY_AUTOMATIC","GTK_POLICY_AUTOMATIC")
                          if(!is.null(width))
-                           sw$SetSizeRequest(width,height)
+                           block$SetSizeRequest(width,height)
                          
                          block$add(widget)
                          widget$show()
 
-                         insert_text(text, where="beginning", font.attr=NULL, do.newline=FALSE)
-                         set_font(font.attr) # buffer font
+                         font_attr <<- getWithDefault(font.attr, list())
+                         insert_text(text, where="beginning",  do.newline=FALSE)
                          
                          add_to_parent(container, .self, ...)
                          
@@ -83,8 +84,18 @@ GText <- setRefClass("GText",
                        },
                        set_value=function(value, ...) {
                          "Replace all text, pasted together with newline"
-                         value <- paste(value, collapse="\n")
-                         buffer$setText(value)
+                         args <- list(...)
+                         drop <- getWithDefault(args$drop, FALSE)
+                         bounds <- buffer$GetSelectionBounds()
+                         if (drop && bounds$retval) {
+                           ## replace selection with new string
+                           buffer$insert(bounds$start, value, -1)
+                           new_bounds <- buffer$GetSelectionBounds()
+                           buffer$delete(new_bounds$start, new_bounds$end)
+                         } else {
+                           value <- paste(value, collapse="\n")
+                           buffer$setText(value)
+                         }
                        },
                        get_index = function(...) {
                          stop("Not defined")
@@ -148,19 +159,25 @@ GText <- setRefClass("GText",
                          }
                        },
                        insert_text=function(value, where, font.attr=NULL, do.newline,  ...) {
-                         "Insert text into buffer. Font.attr is a vector (or list) with named quantities" 
+                         "Insert text into buffer. Font.attr is a list with named quantities" 
                          if(is_empty(value))
                            return()
                          
                           iter <- switch(where,
                                          "end"=buffer$GetEndIter()$iter,
                                          "beginning"=buffer$GetStartIter()$iter,
-                                         buffer$getIterAtMark("insert"))
+                                         buffer$getIterAtMark(buffer$getInsert())$iter)
             
                          value <- paste(c(value,""), collapse=ifelse(do.newline, "\n", ""))
                          arg_list <- list(object=buffer, iter=iter, text=value)
 
-                         if(!is.null(font.attr) && length(font.attr)) {
+                         if(is.null(font.attr)) {
+                           font.attr <- font_attr
+                         } else {
+                           font.attr <- sapply(font.attr, identity, simplify=FALSE)
+                           font.attr <- gWidgets2:::merge.list(font_attr, font.attr)
+                         }
+                         if(length(font.attr) > 0) {
                            for(i in names(font.attr)) {
                              arg_list[[length(arg_list) + 1]] <- get_tag_name(i, font.attr[[i]])
                            }
@@ -178,11 +195,18 @@ GText <- setRefClass("GText",
                          }
                          
                        },
+                         ## editable
+                         get_editable=function(...) {
+                             widget$getEditable()
+                         },
+                         set_editable=function(value,...) {
+                             widget$setEditable(as.logical(value))
+                         },
                        add_handler_changed=function(handler, action=NULL, ...) {
                          add_handler_keystroke(handler, action=action, ...)
                        },
                        add_handler_selection_changed=function(handler, action=NULL, ...) {
-                         message("No good signal for initiating this. Needs hacking XXX")
+                           ## connect to buffer's `mark_set` and grab the selection bounds
                        }
                        ))
 

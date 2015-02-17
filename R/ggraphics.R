@@ -35,7 +35,7 @@ GGraphics <- setRefClass("GGraphics",
                              
                              
                              widget <<- gtkDrawingAreaNew()
-                             asCairoDevice(widget, pointsize=ps)
+                             cairoDevice::asCairoDevice(widget, pointsize=ps)
                              widget$AddEvents(GdkEventMask["all-events-mask"])
                              
                              initFields(block=widget)
@@ -45,7 +45,8 @@ GGraphics <- setRefClass("GGraphics",
 
                              add_widget_events()
                              add_rubber_band()
-                             add_right_mouse_menu()
+                             if(!getWithDefault(list(...)[["no_popup"]], FALSE))
+                               add_right_mouse_menu()
                              add_to_parent(container, .self, ...)
                              
                              handler_id <<- add_handler_changed(handler, action)
@@ -56,7 +57,7 @@ GGraphics <- setRefClass("GGraphics",
                              "Add events to widget to customize behaviours"
                              gSignalConnect(widget, signal="map-event", f = function(w, e, ...) {
                                if(is.null(widget$GetData(".devnum"))) {
-                                 asCairoDevice(widget, pointsize=ps) # turn into cairo device
+                                 cairoDevice::asCairoDevice(widget, pointsize=ps) # turn into cairo device
                                  device_number <<- widget$GetData(".devnum")
                                }
                                return(TRUE)             # don't propogate
@@ -172,6 +173,16 @@ GGraphics <- setRefClass("GGraphics",
                                return(FALSE)
                              })
                            },
+                           copyToClipboard = function() {
+                             da <- widget
+                             if(!is(da, "GtkDrawingArea"))
+                               da <- getWidget(da)                 # ggraphics object
+                             da.w <- da$getAllocation()$width
+                             da.h <- da$getAllocation()$height
+                             buf <- gdkPixbufGetFromDrawable(src=da$window, src.x=0, src.y=0,
+                                                             dest.x=0, dest.y=0, width=da.w, height=da.h)
+                             gtkClipboardGet("CLIPBOARD")$setImage(buf)
+                           },
                            add_right_mouse_menu = function() {
                              "Add menu to right mouse trigger"
                              l <- list()
@@ -179,10 +190,10 @@ GGraphics <- setRefClass("GGraphics",
                                                      handler=function(h, ...) copyToClipboard(obj))
                              l$printAction <- gaction("Save", "Save current graph", icon="save",
                                                       handler=function(h,...) {
-                                                        fname <- gfile(gettext("Filename to save to"), type="save")
+                                                        fname <- gfile(gettext("Filename to save to (pdf)"), type="save")
                                                         if(nchar(fname)) {
                                                           if(!file.exists(fname) || gconfirm(gettext("Overwrite file?")))
-                                                            set_value(fname)
+                                                            dev.copy2pdf(file=fname)
                                                         }
                                                       })
                              add_3rd_mouse_popup_menu(l)

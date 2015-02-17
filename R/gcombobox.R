@@ -48,9 +48,10 @@ GComboBox <- setRefClass("GComboBox",
                              "Hack to make width under windows work better"
                              if(.Platform$OS == "windows") {
                                if(dim(items)[1] > 0) {
-                                 colChars <- max(sapply(items[,1,drop=TRUE],nchar))
+                                 n_char <- function(x) nchar(as.character(x))
+                                 colChars <- max(sapply(items[,1,drop=TRUE],n_char))
                                  if(colChars < 3)
-                                   widget$setWidthRequest(15*(4 + colChars))
+                                   widget$setSizeRequest(15*(4 + colChars), -1L)
                                }
                              }
                            }
@@ -118,9 +119,9 @@ GComboBoxNoEntry <- setRefClass("GComboBoxNoEntry",
                                   get_items = function(i, j, ..., drop=TRUE) {
                                     store <- widget$getModel()
                                     if(drop)
-                                      store[,1, drop=TRUE]
+                                      store[i,1, drop=TRUE]
                                     else
-                                      store[,]
+                                      store[i,]
                                   },
                                   set_items = function(value, i, j, ...) {
                                     "Set items. Indexing is ignored"
@@ -185,6 +186,11 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                     set_value=function(value, ...) {
                                       widget$getChild()$setText(value)
                                     },
+                                      get_index=function(...) {
+                                          val <- get_value()
+                                          items <- get_items()
+                                          match(val, items)
+                                      },
                                     get_items = function(i, j, ..., drop=TRUE) {
                                       poss_items
                                     },
@@ -216,10 +222,14 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                       entry$SetCompletion(completion)
                                       ## add search/clear icon
                                       entry$setIconFromStock("primary", getStockIconByName("ed-search"))
+                                      entry$setIconActivatable("primary", FALSE)
                                       where <- "secondary"
                                       entry$setIconFromStock(where, getStockIconByName("ed-remove"))
                                       entry$setIconActivatable(where, TRUE)
-                                      gSignalConnect(entry, "icon-press", function(e, ...) e$setText(""))
+                                      gSignalConnect(entry, "icon-press", function(e, ...) {
+                                          e$setText("")
+                                          e$grabFocus()
+                                      })
                                     },
                                     add_handler_edited = function(handler, action=NULL, ...) {
                                       "For editing -- need a better name XXX"
@@ -229,7 +239,7 @@ GComboBoxWithEntry <- setRefClass("GComboBoxWithEntry",
                                                      user.data.first = TRUE)
                                     },
                                     add_handler_keystroke=function(handler, action=NULL, ...) {
-                                      gSignalConnect(widget$getChild(), "keystroke", .$self$key_release_decorator(handler),
+                                      gSignalConnect(widget$getChild(), "keystroke", .self$key_release_decorator(handler),
                                                      data=list(obj=obj, action=action,...),
                                                      user.data.first = TRUE)
                                     }

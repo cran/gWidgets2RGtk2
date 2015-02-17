@@ -276,6 +276,26 @@ GDfBase <- setRefClass("GDfBase",
                          rownames(out) <- make.unique(get_rownames())
                          out
                        },
+                         ## DND
+                         ## XXX This needs fleshing out
+                         add_dnd_columns=function() {
+                           ## Hack to add in drag and drop to columns
+                           remove_popup_menu()
+                           add_dnd_to_vc <- function(vc) {
+                             vc$setClickable(TRUE)
+                             btn <- vc$getWidget()$getParent()$getParent()$getParent()
+                             label <- vc$getWidget()$getChild() 
+                             gtkDragSourceSet(btn,
+                                              start.button.mask=c("button1-mask", "button3-mask"),
+                                              targets=widgetTargetTypes[["text"]],
+                                              actions="copy")
+                             gSignalConnect(btn, "drag-data-get", function(data, widget, contet, sel, ty, tm, ...) {
+                               sel$setText(data$getLabel(), -1)
+                             }, label, user.data.first=TRUE)
+                           }
+
+                           QT <- Map(add_dnd_to_vc, widget$getColumns())
+                         },
                        ##
                        ## Column methods
                        ##
@@ -294,6 +314,8 @@ GDfBase <- setRefClass("GDfBase",
                          
                          j <- get_column_index(view_col)
                          set_name(j, nm)
+
+                         
                          model_n         # return
                        },
                        insert_column=function(j, model_idx, nm) {
@@ -498,7 +520,7 @@ GDfBase <- setRefClass("GDfBase",
                          block_handlers()
                          sel_model$unselectAll()
                          lapply(ind, function(i) {
-                           sel_model$selectPath(gtkTreePathNewFromString(i))
+                           sel_model$selectPath(gtkTreePathNewFromString(i-1))
                          })
                          
                          unblock_handlers()
@@ -558,7 +580,9 @@ GDfBase <- setRefClass("GDfBase",
                                              w <- gbasicdialog("Edit factor levels", parent = parent,
                                                                handler = function(h,...) {
                                                                  new_f <- relf$get_value()
-                                                                 assign("out", factor(new_f), inherits=TRUE)
+                                                                 if(!is.factor(new_f))
+                                                                     new_f <- factor(new_f)
+                                                                 assign("out", new_f, inherits=TRUE)
                                                                })
                                              size(w) <- c(600, 400)
                                              
@@ -1284,7 +1308,7 @@ Select levels to collapse.
                                  })
                                  tooltip(add_level) <- gettext("Add a new level to factor")
                                  
-                                 is_ordered <- gcheckbox("Ordered", container=bg, checked=is.ordered(f))
+                                 is_ordered <- gcheckbox("Ordered", container=bg, checked=is.ordered(old))
                                  tooltip(is_ordered) <- gettext("Toggle if factor is ordered")
                                  
                                  
@@ -1472,16 +1496,18 @@ move the selected level to the top.
                                      new_val <- svalue(e)
                                      tmp <- cur_levels[]
                                      if(nchar(new_val) > 0 && !(new_val %in% tmp)) {
-                                       ## adjust factor
-                                       levels(old) <<- c(levels(old), new_val)
-                                       ## add to GUI
-                                       blockHandler(cur_levels)
+                                         tmp <- c(tmp, new_val)
+                                         ## adjust factor
+                                         xx <- old
+                                         levels(xx) <- tmp
+                                         old <<- xx
+                                         ## add to GUI
+                                         blockHandler(cur_levels)
+
+                                         cur_levels[] <- tmp
                                        
-                                       tmp <- c(tmp, new_val)
-                                       cur_levels[] <- tmp
-                                       
-                                       unblockHandler(cur_levels)
-                                       svalue(cur_levels, index=TRUE) <- length(tmp)
+                                         unblockHandler(cur_levels)
+                                         svalue(cur_levels, index=TRUE) <- length(tmp)
                                      }
                                    })
                                    g <- gvbox(cont=dlg)

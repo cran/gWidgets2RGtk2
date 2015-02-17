@@ -27,6 +27,7 @@ NULL
 ##' inherits its primary interface from
 ##' gWidgets2::BasicToolkitInterface.
 ##' @rdname gWidgets2RGtk2-package
+##' @export GComponent
 GComponent <- setRefClass("GComponent",
                                contains="BasicToolkitInterface",
                                fields=list(
@@ -204,8 +205,10 @@ GComponent <- setRefClass("GComponent",
 
                                    if(data.type == "text") {
                                      f <- function(h, widget, context, sel, tType, eTime) {
-                                       message("get drag data")
+                                       #message("get drag data")
                                        val <- handler(h) # returns text
+                                       if (length(val) == 0)
+                                           val <- ""
                                        sel$setText(val, -1) 
                                      }
                                    }
@@ -213,7 +216,7 @@ GComponent <- setRefClass("GComponent",
                                      
                                      key <- digest(.self)
                                      f <- function(h, widget, context, sel, tType, eTime) {
-                                       message("get drag data object")                                       
+                                       #message("get drag data object")                                       
                                        val <- handler(h) ## returns an object
                                        .dnd.env[[key]] <- val
                                        sel$setText(key) 
@@ -226,7 +229,7 @@ GComponent <- setRefClass("GComponent",
                                    
                                    if(data.type == "object") {
                                      gSignalConnect(handler_widget(), "drag-end", f=function(key, ...) {
-                                       message("drag end")
+                                         ## message("drag end")
                                        .dnd.env[[key]] <- NULL # clean up
                                      }, data=digest(.self), user.data.first=TRUE)
                                    }
@@ -257,7 +260,7 @@ GComponent <- setRefClass("GComponent",
                                                       key <- rawToChar(sel$getText())
                                                       h$dropdata <- .dnd.env[[key]]; 
                                                     }
-                                                    handler(h)
+                                                    handler(h, widget=widget, context=context, x=x, y=y, sel=sel, data.type=data.type, event.time=event.time)
 
                                                     
                                                     return(TRUE)
@@ -274,9 +277,9 @@ GComponent <- setRefClass("GComponent",
                                  )
                                )
 
-##' GComponentObservable adds the observable interface
-##'
-##' @param ... passed to constructor
+## GComponentObservable adds the observable interface
+##
+## @param ... passed to constructor
 GComponentObservable <- setRefClass("GComponentObservable",
                                     fields=list(
                                       change_signal="character", # what signal is default change signal
@@ -325,6 +328,24 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         }
                                         event_decorator(f)
                                       },
+                                        button_press_decorator_filter = function(handler, modifier_type) {
+                                            "call handler if Modifier type is correct"
+                                            force(handler)
+                                            f <- function(.self, widget, event, ...) {
+                                                if(event$getState() == modifier_type) {
+                                                    handler(.self,...)
+                                                }
+                                        }
+                                        event_decorator(f)
+                                      },
+                                        button_press_decorator_filter_shift = function(handler) {
+                                            ## catch only shift masked events
+                                            button_press_decorator_filter(handler, GdkModifierType[["shift-mask"]])
+                                        },
+                                        button_press_decorator_filter_control = function(handler) {
+                                            ## catch control masked events
+                                            button_press_decorator_filter(handler, GdkModifierType[["shift-mask"]] + GdkModifierType[["control-mask"]])
+                                        },
                                       ## code for integrating observable interface with RGtk2
                                       is_handler=function(handler) {
                                         "Helper to see if handler is a handler"
@@ -342,8 +363,8 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         "Uses Observable framework for events. Adds observer, then call connect signal method. Override last if done elsewhere"
                                         if(is_handler(handler)) {
                                           o <- gWidgets2:::observer(.self, handler, action)
-                                          invisible(add_observer(o, signal))
                                           connect_to_toolkit_signal(signal, decorator, emitter=emitter)
+                                          invisible(add_observer(o, signal))
                                         }
                                       },
                                       add_event_handler=function(handler, action=NULL, ..., decorator) {
@@ -365,7 +386,7 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                         
                                         ## only connect once
                                         if(is.null(connected_signals[[signal, exact=TRUE]]))
-                                          gSignalConnect(handler_widget(), signal, f, data=.self, user.data.first=TRUE)
+                                          gSignalConnect(handler_widget(), signal, f, data=.self, user.data.first=TRUE, after=FALSE)
                                         connected_signals[[signal]] <<- TRUE
                                       },
                                       ## initiate a handler (emit signal)
@@ -425,8 +446,19 @@ GComponentObservable <- setRefClass("GComponentObservable",
                                       add_handler_clicked = function(handler, action=NULL, ...) {
                                         add_handler("clicked", handler, action, ...)
                                       },
+                                        add_handler_control_clicked = function(handler, action=NULL, ...) {
+                                            add_handler("button-press-event", handler, action,
+                                                        .self$button_press_decorator_filter_control, ...)
+                                        },
+                                        add_handler_shift_clicked = function(handler, action=NULL, ...) {
+                                             add_handler("button-press-event", handler, action,
+                                                         .self$button_press_decorator_filter_shift, ...)
+                                        },
                                       add_handler_button_press=function(handler, action=NULL, ...) {
-                                        add_handler("button-press-event", handler, action, .self$button_press_decorator, ...)
+                                          add_handler("button-press-event", handler, action, .self$button_press_decorator, ...)
+                                      },
+                                      add_handler_button_release=function(handler, action=NULL, ...) {
+                                        add_handler("button-release-event", handler, action, .self$button_press_decorator, ...)
                                       },
                                       add_handler_focus=function(handler, action=NULL, ...) {
                                         add_handler("focus-in-event", handler, action, .self$event_decorator, ...)

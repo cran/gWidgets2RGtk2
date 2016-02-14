@@ -3,11 +3,10 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::glabel
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gstatusbar guiWidgetsToolkitRGtk2
-##' @S3method .gstatusbar guiWidgetsToolkitRGtk2
+## @export .gstatusbar guiWidgetsToolkitRGtk2
 .gstatusbar.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                 text="",
                                                 container = NULL, ... ) {

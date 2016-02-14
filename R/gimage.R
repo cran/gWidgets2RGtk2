@@ -3,11 +3,10 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gimage
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gimage guiWidgetsToolkitRGtk2
-##' @S3method .gimage guiWidgetsToolkitRGtk2
+## @export .gimage guiWidgetsToolkitRGtk2
 .gimage.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                          filename = "", dirname = "", stock.id=NULL, size = "",
                                          handler = NULL,action = NULL, container = NULL, ... ) {

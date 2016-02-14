@@ -6,11 +6,10 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gcheckboxgroup
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gcheckboxgroup guiWidgetsToolkitRGtk2
-##' @S3method .gcheckboxgroup guiWidgetsToolkitRGtk2
+## @export .gcheckboxgroup guiWidgetsToolkitRGtk2
 .gcheckboxgroup.guiWidgetsToolkitRGtk2 <-  function(toolkit=NULL,
                                                     items, checked = FALSE, horizontal = FALSE,
                                                     use.table=FALSE, handler = NULL,
@@ -101,7 +100,12 @@ GCheckboxGroup <- setRefClass("GCheckboxGroup",
                               },
                               get_length = function() {
                                 length(widgets)
-                              }
+                            },
+                                set_font=function(value) {
+                                    sapply(widgets, function(bg) {
+                                        set_rgtk2_font(bg$child, value)
+                                    })
+                                }
                               ))
 
 

@@ -3,11 +3,10 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gtoolbar
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gtoolbar guiWidgetsToolkitRGtk2
-##' @S3method .gtoolbar guiWidgetsToolkitRGtk2
+## @export .gtoolbar guiWidgetsToolkitRGtk2
 .gtoolbar.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                               toolbar.list=list(),
                                               style = c("both","icons","text","both-horiz"),

@@ -3,11 +3,10 @@ NULL
 
 ##' gframe constructor
 ##'
-##' @inheritParams gWidgets2::gframe
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gframe guiWidgetsToolkitRGtk2
-##' @S3method .gframe guiWidgetsToolkitRGtk2
+## @export .gframe guiWidgetsToolkitRGtk2
 .gframe.guiWidgetsToolkitRGtk2 <- function(toolkit, text, markup, pos, horizontal=TRUE, spacing=5,container=NULL, ...) {
   GFrame$new(toolkit, text, markup, pos, horizontal, spacing, container, ...)
 }

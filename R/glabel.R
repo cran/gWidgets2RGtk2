@@ -3,11 +3,10 @@ NULL
 
 ##' Toolkit label constructor
 ##'
-##' @inheritParams gWidgets2::glabel
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .glabel guiWidgetsToolkitRGtk2
-##' @S3method .glabel guiWidgetsToolkitRGtk2
+## @export .glabel guiWidgetsToolkitRGtk2
 .glabel.guiWidgetsToolkitRGtk2 <- function(toolkit, text="", markup=FALSE, editable=FALSE,
                                            handler=NULL, action=NULL, container=NULL,
                                            ...) {

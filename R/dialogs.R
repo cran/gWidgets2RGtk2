@@ -99,12 +99,10 @@ GDialog <- setRefClass("GDialog",
 
 ##' toolkit implementation for gmessage
 ##'
-##' @inheritParams gWidgets2::ginput
-##' @return NULL
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gmessage guiWidgetsToolkitRGtk2
-##' @S3method .gmessage guiWidgetsToolkitRGtk2
+## @export .gmessage guiWidgetsToolkitRGtk2
 .gmessage.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                              msg,
                                              title = "message",
@@ -126,11 +124,10 @@ GMessage <- setRefClass("GMessage", contains="GDialog")
 
 ##' toolkit implementation for gconfirm
 ##'
-##' @inheritParams gWidgets2::ginput
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gconfirm guiWidgetsToolkitRGtk2
-##' @S3method .gconfirm guiWidgetsToolkitRGtk2
+## @export .gconfirm guiWidgetsToolkitRGtk2
 .gconfirm.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                               msg,
                                               title = "Confirm",
@@ -156,11 +153,10 @@ GConfirm <- setRefClass("GConfirm",
 
 ##' toolkit implmentation of ginput
 ##'
-##' @inheritParams gWidgets2::ginput
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .ginput guiWidgetsToolkitRGtk2
-##' @S3method .ginput guiWidgetsToolkitRGtk2
+## @export .ginput guiWidgetsToolkitRGtk2
 .ginput.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                            msg,
                                            text="",
@@ -201,11 +197,10 @@ GInput <- setRefClass("GInput",
 
 ##' toolkit implementation
 ##'
-##' @inheritParams gWidgets2::gbasicdialog
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gbasicdialog guiWidgetsToolkitRGtk2
-##' @S3method .gbasicdialog guiWidgetsToolkitRGtk2
+## @export .gbasicdialog guiWidgetsToolkitRGtk2
 .gbasicdialog.guiWidgetsToolkitRGtk2 <- function(toolkit,
                                                  title = "Dialog",
                                                  parent=NULL,
@@ -341,12 +336,10 @@ GBasicDialog <- setRefClass("GBasicDialog",
 
 ##' toolkit implementation of galert
 ##'
-##' @param delay delay
-##' @inheritParams gWidgets2::gaction
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .galert guiWidgetsToolkitRGtk2
-##' @S3method .galert guiWidgetsToolkitRGtk2
+## @export .galert guiWidgetsToolkitRGtk2
 .galert.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                             msg,
                                             title = "message",
@@ -379,14 +372,28 @@ GBasicDialog <- setRefClass("GBasicDialog",
               if(!is.null(parent))
                 w$setTransientFor(parent)
 
+
               f <- function(...) {
                 timer$stop_timer()
                 if(!is(w, "<invalid>"))
                   w$destroy()
                 FALSE
               }
-              gSignalConnect(evb, "motion-notify-event", f=f)
+#              gSignalConnect(evb, "motion-notify-event", f=f)
 
+              motion_notify_cb <- function(...) {
+                  if(timer$started)
+                      timer$stop_timer()
+                  FALSE
+              }
+              gSignalConnect(evb, "motion-notify-event", f=motion_notify_cb)
+              leave_notify_cb <- function(...) {
+                  timer$set_interval(2*1000)
+                  timer$start_timer()
+                  FALSE
+              }
+              gSignalConnect(evb, "leave-notify-event", f=leave_notify_cb)
+              
               w$show()
 
               timer <- gtimer(delay*1000, FUN=f, one.shot=TRUE, toolkit=toolkit)

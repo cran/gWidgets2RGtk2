@@ -5,11 +5,10 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gformlayout
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gformlayout guiWidgetsToolkitRGtk2
-##' @S3method .gformlayout guiWidgetsToolkitRGtk2
+## @export .gformlayout guiWidgetsToolkitRGtk2
 .gformlayout.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                              align="left",
                                              spacing=5,
@@ -143,6 +142,11 @@ GFormLayout <- setRefClass("GFormLayout",
                                "set font for a label which is specified by its value"
                                labels <- get_labels()
                                set_rgtk2_font(labels[[label_value]], value)
+                             },
+                             set_label_tooltip=function(label_value, value) {
+                                 "Set tooltip for a label specified by its name."
+                                 label <- get_labels()[[label_value]]
+                                 label$setTooltipText(value)
                              }
                              ))
                              

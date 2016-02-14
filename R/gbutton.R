@@ -3,12 +3,12 @@ NULL
 
 
 ##' toolkit constructor
-##' @inheritParams gWidgets2::gbutton
+##'
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @seealso The documentation for this is found at \code{\link{gbutton}}.
 ##' @method .gbutton guiWidgetsToolkitRGtk2
-##' @S3method .gbutton guiWidgetsToolkitRGtk2
+## @export .gbutton guiWidgetsToolkitRGtk2
 .gbutton.guiWidgetsToolkitRGtk2 <- function(toolkit, text, handler, action, container, ...) {
   GButton$new(toolkit, text, handler, action, container, ...)
 }

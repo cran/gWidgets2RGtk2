@@ -3,11 +3,10 @@ NULL
 
 ##' toolkit constructor for ggroup
 ##'
-##' @inheritParams gWidgets2::ggroup
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .ggroup guiWidgetsToolkitRGtk2
-##' @S3method .ggroup guiWidgetsToolkitRGtk2
+## @export .ggroup guiWidgetsToolkitRGtk2
 .ggroup.guiWidgetsToolkitRGtk2 <- function(toolkit, horizontal=TRUE, spacing=5, use.scrollwindow=FALSE, container=NULL, ...) {
   GGroup$new(toolkit, horizontal, spacing=spacing, use.scrollwindow=use.scrollwindow, container, ...)
 }
@@ -82,7 +81,7 @@ GGroupBase <- setRefClass("GGroupBase",
                             box$setSizeRequest(value, -1L)
                           else
                             box$setSizeRequest(-1L, value)
-                          widget$PackStart(gtkHBoxNew(),FALSE, FALSE,0)
+                          widget$PackStart(box,FALSE, FALSE,0)
                         },
                         ## [ for returning children
                         get_items = function(i, j, ..., drop=TRUE) {

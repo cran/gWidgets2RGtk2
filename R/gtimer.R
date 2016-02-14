@@ -3,11 +3,10 @@ NULL
 
 ##' S3 method for gtimer
 ##'
-##' @inheritParams gWidgets2::gtimer
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gtimer guiWidgetsToolkitRGtk2
-##' @S3method .gtimer guiWidgetsToolkitRGtk2
+## @export .gtimer guiWidgetsToolkitRGtk2
 .gtimer.guiWidgetsToolkitRGtk2 <- function(toolkit, ms, FUN, data=NULL, one.shot=FALSE, start=TRUE)
   GTimer$new(toolkit, ms, FUN, data=data, one.shot=one.shot, start=start)
 
@@ -65,7 +64,7 @@ GTimer <- setRefClass("GTimer",
                           }
                           started <<- TRUE
                         },
-                        stop_timer = function() {
+                          stop_timer = function() {
                           "stop the timer"
                           gSourceRemove(ID)
                           started <<- FALSE

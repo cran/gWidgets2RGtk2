@@ -7,11 +7,10 @@ NULL
 ##' @param height height of device (pixels)
 ##' @param dpi dots per inch
 ##' @param ps pointsize
-##' @inheritParams gWidgets2::gwidget
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .ggraphics guiWidgetsToolkitRGtk2
-##' @S3method .ggraphics guiWidgetsToolkitRGtk2
+## @export .ggraphics guiWidgetsToolkitRGtk2
 .ggraphics.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                width = dpi*6, height = dpi*6, dpi = 75, ps = 12,    
                                                handler = NULL,action = NULL, container = NULL, ... ) {
@@ -40,8 +39,8 @@ GGraphics <- setRefClass("GGraphics",
                              
                              initFields(block=widget)
                              
-#                             if(!is.null(width) & !is.null(height))
-#                               set_size(c(width=width, height=height))
+                             if(!is.null(width) & !is.null(height))
+                               set_size(c(width=width, height=height))
 
                              add_widget_events()
                              add_rubber_band()

@@ -12,11 +12,10 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gdf
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gdf guiWidgetsToolkitRGtk2
-##' @S3method .gdf guiWidgetsToolkitRGtk2
+## @export .gdf guiWidgetsToolkitRGtk2
 .gdf.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                          items = NULL,
                     handler = NULL,action = NULL, container = NULL, ... ) {
@@ -35,11 +34,19 @@ NULL
 ensure_type <- function(x, value) UseMethod("ensure_type")
 ensure_type.default <- function(x, value) value
 ensure_type.character <- function(x, value) as.character(value)
-ensure_type.factor <- function(x, value) {x[length(x) + 1] <- value; tail(x, n=1)}
+ensure_type.factor <- function(x, value) {x[length(x) + 1] <- value; utils::tail(x, n=1)}
 ensure_type.numeric <- function(x, value) as.numeric(value)
 ensure_type.integer <- function(x, value) as.integer(value)
 ensure_type.logical <- function(x, value) as.logical(value)
 
+
+my_logical <- function(x) {
+    y <- as.character(x)
+    y[is.na(y)] <- "NA"
+    y <- factor(y)
+    class(y) <- c("mylogical", "factor")
+    y
+}
 
 ##' make a view column for the given type of variable
 ##'
@@ -218,10 +225,16 @@ GDfBase <- setRefClass("GDfBase",
 
                          ## if any row is all NA, then we set the class to numeric
                          for (nm in names(items)) {
-                           if(all(is.na(items[nm]))) {
+                           if(all(is.na(items[,nm]))) {
                              items[nm] <- rep(NA_real_, nrow(items))
                            }
                          }
+
+                         ## turn logical into factor -- must turn back
+                         inds <- which(sapply(items, function(x) is(x, "logical")))
+                         for (i in inds) 
+                             items[[i]] <- my_logical(items[[i]])
+
                          
                          mod_items <- cbind(`_visible`=rep(TRUE, nrow(items)),
                                             `_deleted`=rep(FALSE, nrow(items)),
@@ -274,6 +287,11 @@ GDfBase <- setRefClass("GDfBase",
                          out <- model[not_deleted(),cols, drop=FALSE]
                          names(out) <- get_names()
                          rownames(out) <- make.unique(get_rownames())
+                         ## convert mylogical to logical
+                         inds <- which(sapply(out, function(x) is(x, "mylogical")))
+                         for (i in inds) 
+                             out[[i]] <- as.logical(out[[i]])
+                         
                          out
                        },
                          ## DND

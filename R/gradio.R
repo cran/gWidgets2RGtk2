@@ -3,11 +3,10 @@ NULL
 
 ##' Toolkit  constructor
 ##'
-##' @inheritParams gWidgets2::gradio
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gradio guiWidgetsToolkitRGtk2
-##' @S3method .gradio guiWidgetsToolkitRGtk2
+## @export .gradio guiWidgetsToolkitRGtk2
 .gradio.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                             items,selected=1, horizontal=FALSE, handler=NULL,
                                             action=NULL, container=NULL, ...

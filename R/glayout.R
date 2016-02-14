@@ -3,11 +3,10 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::glayout
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .glayout guiWidgetsToolkitRGtk2
-##' @S3method .glayout guiWidgetsToolkitRGtk2
+## @export .glayout guiWidgetsToolkitRGtk2
 .glayout.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                              homogeneous = FALSE, spacing = 10,
                                              container = NULL, ... ) {

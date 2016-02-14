@@ -3,11 +3,10 @@ NULL
 
 ##' Toolkit constructor
 ##'
-##' @inheritParams gWidgets2::gnotebook
 ##' @export
 ##' @rdname gWidgets2RGtk2-undocumented
 ##' @method .gnotebook guiWidgetsToolkitRGtk2
-##' @S3method .gnotebook guiWidgetsToolkitRGtk2
+## @export .gnotebook guiWidgetsToolkitRGtk2
 .gnotebook.guiWidgetsToolkitRGtk2 <-  function(toolkit,
                                                tab.pos = 3, 
                                                container = NULL, ... ) {

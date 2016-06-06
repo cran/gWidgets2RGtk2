@@ -1,13 +1,13 @@
 Package: gWidgets2RGtk2
 Type: Package
 Title: Implementation of gWidgets2 for the RGtk2 Package
-Version: 1.0-4
+Version: 1.0-5
 Author: John Verzani
 Maintainer: John Verzani <jverzani@gmail.com>
 URL: https://github.com/jverzani/gWidgets2RGtk2
 Description: Implements the 'gWidgets2' API for 'RGtk2.'
 License: GPL-3
-Depends: methods, memoise, RGtk2, gWidgets2
+Depends: methods, memoise, RGtk2, gWidgets2(>= 1.0.7)
 Suggests: testthat, cairoDevice
 LazyLoad: yes
 Collate: 'gWidgets2RGtk2-package.R' 'misc.R' 'gtk-misc.R'
@@ -22,6 +22,6 @@ Collate: 'gWidgets2RGtk2-package.R' 'misc.R' 'gtk-misc.R'
         'gvarbrowser.R' 'gwindow.R' 'icons.R' 'startup.R'
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2016-02-14 18:41:37 UTC; jverzani
+Packaged: 2016-06-06 12:00:04 UTC; jverzani
 Repository: CRAN
-Date/Publication: 2016-02-14 19:57:53
+Date/Publication: 2016-06-06 18:04:38

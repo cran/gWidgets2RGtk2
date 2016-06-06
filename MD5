@@ -1,4 +1,4 @@
-e2d1e151bbd50454bc78227fcec244de *DESCRIPTION
+8ea6e1b2daab22dd93f4370957a19388 *DESCRIPTION
 b2bece96cfe683342b6d56879394ff58 *NAMESPACE
 ffbeea8df3bbb9e7c17fc3f0647c2038 *NEWS
 72a3148805f1fa343ac54a7c42ca387c *R/GComponent.R
@@ -7,16 +7,16 @@ ffbeea8df3bbb9e7c17fc3f0647c2038 *NEWS
 20f0bf37231309544f521bc1aab54bf6 *R/aaa.R
 b599f404ca88d78e99a653cf388950cc *R/dialogs.R
 0914e947c821c8db2ca17976f08b05c7 *R/gWidgets2RGtk2-package.R
-f693f9988d1234caaf9d8759315d21ef *R/gaction.R
+9abadfcf22c874bdf7f8986ff53676cd *R/gaction.R
 b41253372412885509e481c6b7f17cdb *R/gbutton.R
 df55c552117ee3c424af47a66f9c12f9 *R/gcalendar.R
 fae3634456c9c837bf0878556a12dc67 *R/gcheckbox.R
 eeaff062b3857a14ea5e1d8f51ebed49 *R/gcheckboxgroup.R
 8e1659e1e366d1c7f706d21d224587ff *R/gcombobox.R
-5d5c9c42435bfef334b6b4ab33ddd6ee *R/gdf.R
+f4f7689d2a0721b158de574b14fd3c95 *R/gdf.R
 207b5d0c17e5872e776eac857cc0e27c *R/gedit.R
 3059230c506e80e11ca494b231351b2c *R/gexpandgroup.R
-a5d0c887f91589738612b00bb4dc58db *R/gfile.R
+7ef29ed9860c722cfc8250ab2fa8afc4 *R/gfile.R
 cea9672b41a9d9c93d6cd4d8ceb9da40 *R/gformlayout.R
 123897f8db754bbb5576e82e121ad23a *R/gframe.R
 e3bcbdab9e7d92f8f5b425d80957e85a *R/ggraphics.R

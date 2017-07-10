@@ -231,7 +231,7 @@ GDfBase <- setRefClass("GDfBase",
 
                          ## if any row is all NA, then we set the class to numeric
                          for (nm in names(items)) {
-                           if(all(is.na(items[,nm]))) {
+                           if(all(is.na(items[nm]))) {
                              items[nm] <- rep(NA_real_, nrow(items))
                            }
                          }
@@ -666,7 +666,7 @@ GDfBase <- setRefClass("GDfBase",
                          
                          
                          sapply(widget$getColumns()[-1], function(view.col) {
-                           add_popup_to_view_col(view.col)
+                           add_popup_to_view_col(view.col, menu_fun)
                          })
                        },
                        add_popup_to_view_col=function(view.col, menu_fun) {

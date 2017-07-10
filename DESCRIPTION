@@ -1,7 +1,7 @@
 Package: gWidgets2RGtk2
 Type: Package
 Title: Implementation of gWidgets2 for the RGtk2 Package
-Version: 1.0-5
+Version: 1.0-6
 Author: John Verzani
 Maintainer: John Verzani <jverzani@gmail.com>
 URL: https://github.com/jverzani/gWidgets2RGtk2
@@ -22,6 +22,6 @@ Collate: 'gWidgets2RGtk2-package.R' 'misc.R' 'gtk-misc.R'
         'gvarbrowser.R' 'gwindow.R' 'icons.R' 'startup.R'
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2016-06-06 12:00:04 UTC; jverzani
+Packaged: 2017-07-10 15:02:31 UTC; jverzani
 Repository: CRAN
-Date/Publication: 2016-06-06 18:04:38
+Date/Publication: 2017-07-10 18:25:43 UTC

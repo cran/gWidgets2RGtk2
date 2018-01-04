@@ -1,4 +1,4 @@
-18183b12818f2e8859585f7ceb5b4c9c *DESCRIPTION
+cd7777871f20f167ee4cd6c938d52de4 *DESCRIPTION
 b2bece96cfe683342b6d56879394ff58 *NAMESPACE
 ffbeea8df3bbb9e7c17fc3f0647c2038 *NEWS
 807f5c079c8783da93afbae0f78b73df *R/GComponent.R
@@ -8,7 +8,7 @@ ffbeea8df3bbb9e7c17fc3f0647c2038 *NEWS
 a4c5b46568b60df25d84a653c36140a0 *R/dialogs.R
 0914e947c821c8db2ca17976f08b05c7 *R/gWidgets2RGtk2-package.R
 9abadfcf22c874bdf7f8986ff53676cd *R/gaction.R
-8cae8c60585bf6baa9e300b17898e342 *R/gbutton.R
+a19c86ab280ee74bc3233dfafa27d6d4 *R/gbutton.R
 df55c552117ee3c424af47a66f9c12f9 *R/gcalendar.R
 fae3634456c9c837bf0878556a12dc67 *R/gcheckbox.R
 eeaff062b3857a14ea5e1d8f51ebed49 *R/gcheckboxgroup.R
@@ -54,11 +54,11 @@ b2d3974a72489920a03869c88be37db7 *man/GEdit.Rd
 435dc493739f6a94a798b8e071d2a2f2 *man/GMessage.Rd
 0f54d5267129f0556ff13f8415a1449f *man/GTree.Rd
 5924e22d87a75ec295f3a5e89e138418 *man/GTreeBase.Rd
-be324b2ab4bb48338063b75ba069bf0d *man/add_editable_cell_renderer.Rd
-2c02d984d6357b435fa81a48703cb5fe *man/ensure_type.Rd
-143d24f6925d42f03710861815028a46 *man/gWidgets2RGtk2-package.Rd
-b4a2e169faf857308d7ce7cf90292935 *man/gWidgets2RGtk2-undocumented.Rd
-2b39553b727a3c879eb9d4f37c023c46 *man/guiWidgetsToolkitRGtk2-class.Rd
-faf99df01e28f9a2a95ef91a41f382f5 *man/isFirstMouseClick.Rd
-d5855e17e3867ccae45c81732cfe9630 *man/isRightMouseClick.Rd
+02ee5ac092936d3d38857903e8c9b2dc *man/add_editable_cell_renderer.Rd
+adbba0951e648fcf1e8f34f0b8540ca6 *man/ensure_type.Rd
+1d4049af5c02d4a40fa52e69d15edeb0 *man/gWidgets2RGtk2-package.Rd
+16025a1e9e67f693bc15c388228036b6 *man/gWidgets2RGtk2-undocumented.Rd
+a43b6c3d405700c447b59edce0bb99f3 *man/guiWidgetsToolkitRGtk2-class.Rd
+de63f5b1ba1b9d933016de77f433b8b5 *man/isFirstMouseClick.Rd
+098d20e445a4595e8c66c635eee3ae91 *man/isRightMouseClick.Rd
 40c1817503c71ff31b961a03159166cb *tests/run-tests.R
